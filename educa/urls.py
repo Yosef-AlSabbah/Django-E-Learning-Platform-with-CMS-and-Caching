@@ -26,6 +26,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('course/', include('courses.urls')),
     path('students/', include('students.urls')),
+    path('__deubug__/', include("debug_toolbar.urls")),
 ]
 
 if settings.DEBUG:
