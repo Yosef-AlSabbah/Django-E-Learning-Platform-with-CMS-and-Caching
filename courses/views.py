@@ -10,8 +10,10 @@ from django.views.generic import DetailView
 from django.views.generic.base import TemplateResponseMixin, View
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.views.generic.list import ListView
+from rest_framework import viewsets
 
 from students.views import StudentEnrollCourseView
+from .api.serializers import CourseSerializer
 from .forms import ModuleFormSet
 from .models import Course, Module, Content, Subject
 
