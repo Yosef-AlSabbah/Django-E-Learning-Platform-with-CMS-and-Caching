@@ -10,10 +10,8 @@ from django.views.generic import DetailView
 from django.views.generic.base import TemplateResponseMixin, View
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.views.generic.list import ListView
-from rest_framework import viewsets
 
-from students.views import StudentEnrollCourseView
-from .api.serializers import CourseSerializer
+from students.forms import CourseEnrollForm
 from .forms import ModuleFormSet
 from .models import Course, Module, Content, Subject
 
@@ -31,6 +29,7 @@ class OwnerEditMixin:
 
 
 class OwnerCourseMixin(OwnerMixin, LoginRequiredMixin, PermissionRequiredMixin):
+    template_name = 'courses/manage/course/form.html'
     model = Course
     fields = ['subject', 'title', 'slug', 'overview']
     success_url = reverse_lazy('manage_course_list')
@@ -242,7 +241,7 @@ class CourseDetailView(DetailView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['enroll_form'] = StudentEnrollCourseView(
+        context['enroll_form'] = CourseEnrollForm(
             initial={'course': self.object}
         )
         return context

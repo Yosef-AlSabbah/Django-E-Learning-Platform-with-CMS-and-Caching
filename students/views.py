@@ -39,7 +39,7 @@ class StudentEnrollCourseView(LoginRequiredMixin, FormView):
 
 class StudentCourseListView(LoginRequiredMixin, ListView):
     model = Course
-    template_name = 'courses/student/course/list.html'
+    template_name = 'students/course/list.html'
 
     def get_queryset(self):
         return self.request.user.courses_joined.all()
@@ -47,17 +47,22 @@ class StudentCourseListView(LoginRequiredMixin, ListView):
 
 class StudentCourseDetailView(LoginRequiredMixin, DetailView):
     model = Course
-    template_name = 'courses/student/course/detail.html'
+    template_name = 'students/course/detail.html'
 
     def get_queryset(self):
-        return self.request.user.courses_joined.all()
+        qs = super().get_queryset()
+        return qs.filter(students__in=[self.request.user])
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        course = self.object
-        if 'module_id' in kwargs:
-            context['module'] = course.modules.get(id=kwargs['module_id'])
+        # get course object
+        course = self.get_object()
+        if 'module_id' in self.kwargs:
+            # get current module
+            context['module'] = course.modules.get(
+                id=self.kwargs['module_id']
+            )
         else:
-            context['module'] = course.modules.all()[0]
-
+            # get first module
+            context['module'] = course.modules.all().first()
         return context

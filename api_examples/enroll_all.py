@@ -11,18 +11,19 @@ while url is not None:
     url = response['next']
     courses = response['results']
     available_courses += [course['title'] for course in courses]
+
+    username = '1'
+    password = '1'
+
+    for course in courses:
+        course_id = course['id']
+        course_title = course['title']
+        r = requests.post(
+            f'{base_url}courses/{course_id}/enroll/',
+            auth=(username, password)
+        )
+        if r.status_code == 200:
+            # successful request
+            print(f'Successfully enrolled in {course_title}')
+
 print(f'Available courses: {", ".join(available_courses) if len(available_courses) > 0 else "Empty"}')
-
-username = '1'
-password = '1'
-
-for course in courses:
-    course_id = course['id']
-    course_title = course['title']
-    r = requests.post(
-        f'{base_url}courses/{course_id}/enroll/',
-        auth=(username, password)
-    )
-    if r.status_code == 200:
-        # successful request
-        print(f'Successfully enrolled in {course_title}')
